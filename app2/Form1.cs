@@ -44,7 +44,7 @@ namespace app2
                 "Разработал данную программу Мик Ман-Ди [1532143].\n" +
                 "При создании кода пользовался нейросетью ChatGPT.\n" +
                 "\n" +
-                "Версия 1.1",
+                "Версия 1.2",
                 "О программе! Гром и молния!");
         }
         //все переменные программы
@@ -101,17 +101,56 @@ namespace app2
                 }
             }
             // если не был выбран файл
-            else
+            else if (filePath == null)
             {
                 MessageBox.Show("Пират, ты не выбрал файл!", "300 якорей мне в зад!");
             }
+            // если файл каким-то чудом удалили или переместили
+            else
+            {
+                MessageBox.Show("Пират, ты куда дел файл с отчетами? Верни его на место!", "Разрази тебя гром!");
+            }
         }
 
+        public bool ProverkaNaSpheru(string[] reportLines, bool ohrana, bool prod, bool vrach, string line)
+        {
+            bool continuePodchet;
+            if (line.StartsWith("Отчёт о пограничном патруле") && (ohrana == false))
+            {
+                continuePodchet = false;
+            }
+            else if (line.StartsWith("Отчёт об охотничьем патруле") && (prod == false))
+            {
+                continuePodchet = false;
+            }
+            else if ((line.StartsWith("Отчёт об одиночном") || line.StartsWith("Отчёт о веточнике") || line.StartsWith("Отчёт о травнике")
+                || line.StartsWith("Отчёт о мховнике")) && (vrach == false))
+            {
+                continuePodchet = false;
+            }
+            else continuePodchet = true;
+            return continuePodchet;
+        }
 
+        public bool ProverkaNaLishnee(string[] reportLines, string line)
+        {
+            bool continuePodchet;
+            if (line.StartsWith("Отчёт о рейде"))
+            {
+                continuePodchet = false;
+            }
+            else
+            {
+                continuePodchet = true;
+            }
+
+            return continuePodchet;
+        }
 
         // ПОДСЧЕТ ДЕЯТЕЛЬНОСТИ
         public void Ohrana(string filePath, string[] reportLines)
         {
+
             Dictionary<string, int> collectors = new Dictionary<string, int>();
             Dictionary<string, int> leaders = new Dictionary<string, int>();
             Dictionary<string, int> participants = new Dictionary<string, int>();
@@ -120,44 +159,58 @@ namespace app2
 
             foreach (string line in reportLines)
             {
-                if (line.StartsWith("Собирающий:"))
+                if (ProverkaNaSpheru(reportLines, radioButtonOhrana.Checked, radioButtonProd.Checked, radioButtonVrach.Checked, line) 
+                    && ProverkaNaLishnee(reportLines, line))
                 {
-                    Match collectorMatch = Regex.Match(line, @"\[(\d+)\]");
-                    if (collectorMatch.Success)
+                    if (line.StartsWith("Собирающий:"))
                     {
-                        string collectorId = collectorMatch.Groups[1].Value;
-                        collectors.TryGetValue(collectorId, out int count);
-                        collectors[collectorId] = count + 1;
-                    }
-                }
-                else if (line.StartsWith("Ведущий:"))
-                {
-                    Match leadingPlayerMatch = Regex.Match(line, @"\[(\d+)\]");
-                    if (leadingPlayerMatch.Success)
-                    {
-                        leadingPlayerId = leadingPlayerMatch.Groups[1].Value;
-                    }
-
-                    MatchCollection leaderMatches = Regex.Matches(line, @"\[(\d+)\]");
-                    foreach (Match match in leaderMatches)
-                    {
-                        string leaderId = match.Groups[1].Value;
-                        leaders.TryGetValue(leaderId, out int count);
-                        leaders[leaderId] = count + 1;
-                    }
-                }
-                else if ((line.StartsWith("Участники:") || line.StartsWith("Участник(и):") || line.StartsWith("Участник:")))
-                {
-                    MatchCollection participantMatches = Regex.Matches(line, @"\[(\d+)\]");
-                    foreach (Match match in participantMatches)
-                    {
-                        string participantId = match.Groups[1].Value;
-                        if (participantId != leadingPlayerId)
+                        Match collectorMatch = Regex.Match(line, @"\[(\d+)\]");
+                        if (collectorMatch.Success)
                         {
-                            participants.TryGetValue(participantId, out int count);
-                            participants[participantId] = count + 1;
+                            string collectorId = collectorMatch.Groups[1].Value;
+                            collectors.TryGetValue(collectorId, out int count);
+                            collectors[collectorId] = count + 1;
                         }
                     }
+                    else if (line.StartsWith("Ведущий:"))
+                    {
+                        Match leadingPlayerMatch = Regex.Match(line, @"\[(\d+)\]");
+                        if (leadingPlayerMatch.Success)
+                        {
+                            leadingPlayerId = leadingPlayerMatch.Groups[1].Value;
+                        }
+
+                        MatchCollection leaderMatches = Regex.Matches(line, @"\[(\d+)\]");
+                        foreach (Match match in leaderMatches)
+                        {
+                            string leaderId = match.Groups[1].Value;
+                            leaders.TryGetValue(leaderId, out int count);
+                            leaders[leaderId] = count + 1;
+                        }
+                    }
+                    else if ((line.StartsWith("Участники:") || line.StartsWith("Участник(и):") || line.StartsWith("Участник:")))
+                    {
+                        MatchCollection participantMatches = Regex.Matches(line, @"\[(\d+)\]");
+                        foreach (Match match in participantMatches)
+                        {
+                            string participantId = match.Groups[1].Value;
+                            if (participantId != leadingPlayerId)
+                            {
+                                participants.TryGetValue(participantId, out int count);
+                                participants[participantId] = count + 1;
+                            }
+                        }
+                    }
+                }
+                else if (!ProverkaNaSpheru(reportLines, radioButtonOhrana.Checked, radioButtonProd.Checked, radioButtonVrach.Checked, line))
+                {
+                    MessageBox.Show("Пират, в этом документе есть отчеты из другой сферы! Удали их!", "Кальмарьи кишки!");
+                    break;
+                }
+                else if (!ProverkaNaLishnee(reportLines, line))
+                {
+                    MessageBox.Show("Пират, тут есть что-то лишнее, и оно помешает подсчету! Убери его отсюда!", "Тысяча горбатых моллюсков!");
+                    break;
                 }
             }
 
@@ -192,60 +245,74 @@ namespace app2
 
             foreach (string line in reportLines)
             {
-                Match dateMatch = Regex.Match(line, @"\d{2}\.\d{2}\.\d{2,4}");
-                if (dateMatch.Success)
+                if ((ProverkaNaSpheru(reportLines, radioButtonOhrana.Checked, radioButtonProd.Checked, radioButtonVrach.Checked, line)
+                    && ProverkaNaLishnee(reportLines, line)))
                 {
-                    string dateStr = dateMatch.Value;
-                    DateTime date;
-                    if (DateTime.TryParseExact(dateStr, dateFormats, null, System.Globalization.DateTimeStyles.None, out date))
+                    Match dateMatch = Regex.Match(line, @"\d{2}\.\d{2}\.\d{2,4}");
+                    if (dateMatch.Success)
                     {
-                        currentDate = date.ToString("yyyy-MM-dd");
-                    }
-                }
-                else if (line.StartsWith("Собирающий:"))
-                {
-                    Match collectorMatch = Regex.Match(line, @"\[(\d+)\]");
-                    if (collectorMatch.Success)
-                    {
-                        string collectorId = collectorMatch.Groups[1].Value;
-                        collectors.TryGetValue(collectorId, out int count);
-                        collectors[collectorId] = count + 1;
-                    }
-                }
-                else if (line.StartsWith("Участники:"))
-                {
-                    MatchCollection participantMatches = Regex.Matches(line, @"(.+?)\s\[(\d+)\]\s\(\+(\d+)\)");
-                    foreach (Match match in participantMatches)
-                    {
-                        string participantName = match.Groups[1].Value;
-                        string participantId = match.Groups[2].Value;
-                        int participantCount = int.Parse(match.Groups[3].Value);
-
-                        participants.TryGetValue(participantId, out int count);
-                        participants[participantId] = count + participantCount;
-
-                        if (!caughtAnimals.ContainsKey(participantId))
+                        string dateStr = dateMatch.Value;
+                        DateTime date;
+                        if (DateTime.TryParseExact(dateStr, dateFormats, null, System.Globalization.DateTimeStyles.None, out date))
                         {
-                            caughtAnimals[participantId] = new Dictionary<string, int>();
+                            currentDate = date.ToString("yyyy-MM-dd");
                         }
-                        if (!caughtAnimals[participantId].ContainsKey(currentDate))
+                    }
+                    else if (line.StartsWith("Собирающий:"))
+                    {
+                        Match collectorMatch = Regex.Match(line, @"\[(\d+)\]");
+                        if (collectorMatch.Success)
                         {
-                            caughtAnimals[participantId][currentDate] = 0;
+                            string collectorId = collectorMatch.Groups[1].Value;
+                            collectors.TryGetValue(collectorId, out int count);
+                            collectors[collectorId] = count + 1;
                         }
-                        caughtAnimals[participantId][currentDate] += participantCount;
+                    }
+                    else if (line.StartsWith("Участники:"))
+                    {
+                        MatchCollection participantMatches = Regex.Matches(line, @"(.+?)\s\[(\d+)\]\s\(\+(\d+)\)");
+                        foreach (Match match in participantMatches)
+                        {
+                            string participantName = match.Groups[1].Value;
+                            string participantId = match.Groups[2].Value;
+                            int participantCount = int.Parse(match.Groups[3].Value);
+
+                            participants.TryGetValue(participantId, out int count);
+                            participants[participantId] = count + participantCount;
+
+                            if (!caughtAnimals.ContainsKey(participantId))
+                            {
+                                caughtAnimals[participantId] = new Dictionary<string, int>();
+                            }
+                            if (!caughtAnimals[participantId].ContainsKey(currentDate))
+                            {
+                                caughtAnimals[participantId][currentDate] = 0;
+                            }
+                            caughtAnimals[participantId][currentDate] += participantCount;
+                        }
+                    }
+                    else if (line.StartsWith("Помощники:"))
+                    {
+                        MatchCollection assistantMatches = Regex.Matches(line, @"(.+?)\s\[(\d+)\]");
+                        foreach (Match match in assistantMatches)
+                        {
+                            string assistantName = match.Groups[1].Value;
+                            string assistantId = match.Groups[2].Value;
+
+                            assistants.TryGetValue(assistantId, out int count);
+                            assistants[assistantId] = count + 1;
+                        }
                     }
                 }
-                else if (line.StartsWith("Помощники:"))
+                if (!ProverkaNaSpheru(reportLines, radioButtonOhrana.Checked, radioButtonProd.Checked, radioButtonVrach.Checked, line))
                 {
-                    MatchCollection assistantMatches = Regex.Matches(line, @"(.+?)\s\[(\d+)\]");
-                    foreach (Match match in assistantMatches)
-                    {
-                        string assistantName = match.Groups[1].Value;
-                        string assistantId = match.Groups[2].Value;
-
-                        assistants.TryGetValue(assistantId, out int count);
-                        assistants[assistantId] = count + 1;
-                    }
+                    MessageBox.Show("Пират, в этом документе есть отчеты из другой сферы! Удали их!", "Кальмарьи кишки!");
+                    break;
+                }
+                else if (!ProverkaNaLishnee(reportLines, line))
+                {
+                    MessageBox.Show("Пират, тут есть что-то лишнее, и оно помешает подсчету! Убери его отсюда!", "Тысяча горбатых моллюсков!");
+                    break;
                 }
             }
 
@@ -286,58 +353,73 @@ namespace app2
             bool isDoctorPatrol = false;
             foreach (string line in reportLines)
             {
-                if (line.StartsWith("Отчёт о докторском патруле"))
+                if ((ProverkaNaSpheru(reportLines, radioButtonOhrana.Checked, radioButtonProd.Checked, radioButtonVrach.Checked, line)
+                    && ProverkaNaLishnee(reportLines, line)))
                 {
-                    isDoctorPatrol = true;
-                }
-                else if (line.StartsWith("Отчёт о веточнике") || line.StartsWith("Отчёт о травнике") || line.StartsWith("Отчёт о мховнике") || line.StartsWith("Отчёт об одиночном"))
-                {
-                    isDoctorPatrol = false;
-                }
-
-                if (isDoctorPatrol)
-                {
-                    if (line.StartsWith("Участники:"))
+                    if (line.StartsWith("Отчёт о докторском патруле"))
                     {
-                        MatchCollection participantMatches = Regex.Matches(line, @"(.+?)\s\[(\d+)\]\s\(\+([\d\w\s]+)\)");
-                        foreach (Match match in participantMatches)
+                        isDoctorPatrol = true;
+                    }
+                    else if (line.StartsWith("Отчёт о веточнике") || line.StartsWith("Отчёт о травнике") || line.StartsWith("Отчёт о мховнике") || line.StartsWith("Отчёт об одиночном"))
+                    {
+                        isDoctorPatrol = false;
+                    }
+
+                    if (isDoctorPatrol)
+                    {
+                        if (line.StartsWith("Участники:"))
                         {
-                            string participantName = match.Groups[1].Value;
-                            string participantId = match.Groups[2].Value;
-                            string participantCountString = match.Groups[3].Value;
-
-                            int participantCount = GetParticipantCount(participantCountString);
-
-                            if (!participants.ContainsKey(participantId))
+                            MatchCollection participantMatches = Regex.Matches(line, @"(.+?)\s\[(\d+)\]\s\(\+([\d\w\s]+)\)");
+                            foreach (Match match in participantMatches)
                             {
-                                participants[participantId] = new Dictionary<string, int>();
-                            }
+                                string participantName = match.Groups[1].Value;
+                                string participantId = match.Groups[2].Value;
+                                string participantCountString = match.Groups[3].Value;
 
-                            participants[participantId].TryGetValue("мыши", out int count);
-                            participants[participantId]["мыши"] = count + participantCount;
+                                int participantCount = GetParticipantCount(participantCountString);
+
+                                if (!participants.ContainsKey(participantId))
+                                {
+                                    participants[participantId] = new Dictionary<string, int>();
+                                }
+
+                                participants[participantId].TryGetValue("мыши", out int count);
+                                participants[participantId]["мыши"] = count + participantCount;
+                            }
                         }
-                    }
-                    else if (line.StartsWith("Собирающий:"))
-                    {
-                        Match collectorMatch = Regex.Match(line, @"\[(\d+)\]");
-                        if (collectorMatch.Success)
+                        else if (line.StartsWith("Собирающий:"))
                         {
-                            string collectorId = collectorMatch.Groups[1].Value;
-                            collectors.TryGetValue(collectorId, out int count);
-                            collectors[collectorId] = count + 1;
+                            Match collectorMatch = Regex.Match(line, @"\[(\d+)\]");
+                            if (collectorMatch.Success)
+                            {
+                                string collectorId = collectorMatch.Groups[1].Value;
+                                collectors.TryGetValue(collectorId, out int count);
+                                collectors[collectorId] = count + 1;
+                            }
                         }
-                    }
-                    else if (line.StartsWith("Помощники:"))
-                    {
-                        MatchCollection assistantMatches = Regex.Matches(line, @"\[(\d+)\]");
-                        foreach (Match match in assistantMatches)
+                        else if (line.StartsWith("Помощники:"))
                         {
-                            string assistantId = match.Groups[1].Value;
-                            assistants.TryGetValue(assistantId, out int count);
-                            assistants[assistantId] = count + 1;
+                            MatchCollection assistantMatches = Regex.Matches(line, @"\[(\d+)\]");
+                            foreach (Match match in assistantMatches)
+                            {
+                                string assistantId = match.Groups[1].Value;
+                                assistants.TryGetValue(assistantId, out int count);
+                                assistants[assistantId] = count + 1;
+                            }
                         }
                     }
                 }
+                if (!ProverkaNaSpheru(reportLines, radioButtonOhrana.Checked, radioButtonProd.Checked, radioButtonVrach.Checked, line))
+                {
+                    MessageBox.Show("Пират, в этом документе есть отчеты из другой сферы! Удали их!", "Кальмарьи кишки!");
+                    break;
+                }
+                else if (!ProverkaNaLishnee(reportLines, line))
+                {
+                    MessageBox.Show("Пират, тут есть что-то лишнее, и оно помешает подсчету! Убери его отсюда!", "Тысяча горбатых моллюсков!");
+                    break;
+                }
+
             }
             static int GetParticipantCount(string participantCountString)
             {
@@ -383,59 +465,71 @@ namespace app2
             bool isDoctorPatrol = false;
             foreach (string line in reportLines)
             {
-                if (line.StartsWith("Отчёт о докторском патруле."))
+                if ((ProverkaNaSpheru(reportLines, radioButtonOhrana.Checked, radioButtonProd.Checked, radioButtonVrach.Checked, line)
+                    && ProverkaNaLishnee(reportLines, line)))
                 {
-                    isDoctorPatrol = true;
-                }
-                else if (line.StartsWith("Отчёт о веточнике") || line.StartsWith("Отчёт о травнике") || line.StartsWith("Отчёт о мховнике")
-                    || line.StartsWith("Отчёт об одиночном"))
-                {
-                    isDoctorPatrol = false;
-                }
-
-                if (!isDoctorPatrol)
-                {
-
-                    if (line.StartsWith("Отчёт об одиночном"))
+                    if (line.StartsWith("Отчёт о докторском патруле."))
                     {
-                        isSingleEvent = true;
+                        isDoctorPatrol = true;
                     }
-                    else if (line.StartsWith("Отчёт о веточнике.") || line.StartsWith("Отчёт о травнике.") || line.StartsWith("Отчёт о мховнике."))
+                    else if (line.StartsWith("Отчёт о веточнике") || line.StartsWith("Отчёт о травнике") || line.StartsWith("Отчёт о мховнике")
+                        || line.StartsWith("Отчёт об одиночном"))
                     {
-                        isSingleEvent = false;
+                        isDoctorPatrol = false;
                     }
-                    else if (line.StartsWith("Собирающий:") && !isSingleEvent)
+
+                    if (!isDoctorPatrol)
                     {
-                        Match collectorMatch = Regex.Match(line, @"\[(\d+)\]");
-                        if (collectorMatch.Success)
+
+                        if (line.StartsWith("Отчёт об одиночном"))
                         {
-                            string collectorId = collectorMatch.Groups[1].Value;
-                            collectors.TryGetValue(collectorId, out int count);
-                            collectors[collectorId] = count + 1;
+                            isSingleEvent = true;
                         }
-                    }
-                    else if (line.StartsWith("Участники:") || line.StartsWith("Участник(и):") || line.StartsWith("Участник:"))
-                    {
-                        MatchCollection participantMatches = Regex.Matches(line, @"\[(\d+)\]");
-                        foreach (Match match in participantMatches)
+                        else if (line.StartsWith("Отчёт о веточнике.") || line.StartsWith("Отчёт о травнике.") || line.StartsWith("Отчёт о мховнике."))
                         {
-                            string participantId = match.Groups[1].Value;
-                            if (isSingleEvent)
+                            isSingleEvent = false;
+                        }
+                        else if (line.StartsWith("Собирающий:") && !isSingleEvent)
+                        {
+                            Match collectorMatch = Regex.Match(line, @"\[(\d+)\]");
+                            if (collectorMatch.Success)
                             {
-                                singleCollectors.TryGetValue(participantId, out int count);
-                                singleCollectors[participantId] = count + 1;
-                            }
-                            else
-                            {
-                                participants.TryGetValue(participantId, out int count);
-                                participants[participantId] = count + 1;
+                                string collectorId = collectorMatch.Groups[1].Value;
+                                collectors.TryGetValue(collectorId, out int count);
+                                collectors[collectorId] = count + 1;
                             }
                         }
+                        else if (line.StartsWith("Участники:") || line.StartsWith("Участник(и):") || line.StartsWith("Участник:"))
+                        {
+                            MatchCollection participantMatches = Regex.Matches(line, @"\[(\d+)\]");
+                            foreach (Match match in participantMatches)
+                            {
+                                string participantId = match.Groups[1].Value;
+                                if (isSingleEvent)
+                                {
+                                    singleCollectors.TryGetValue(participantId, out int count);
+                                    singleCollectors[participantId] = count + 1;
+                                }
+                                else
+                                {
+                                    participants.TryGetValue(participantId, out int count);
+                                    participants[participantId] = count + 1;
+                                }
+                            }
+                        }
                     }
-
+                }
+                if (!ProverkaNaSpheru(reportLines, radioButtonOhrana.Checked, radioButtonProd.Checked, radioButtonVrach.Checked, line))
+                {
+                    MessageBox.Show("Пират, в этом документе есть отчеты из другой сферы! Удали их!", "Кальмарьи кишки!");
+                    break;
+                }
+                else if (!ProverkaNaLishnee(reportLines, line))
+                {
+                    MessageBox.Show("Пират, тут есть что-то лишнее, и оно помешает подсчету! Убери его отсюда!", "Тысяча горбатых моллюсков!");
+                    break;
                 }
             }
-
 
 
             // Вывод результатов
