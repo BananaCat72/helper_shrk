@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\что-то мое\\проги\\helper_shrk\\app2\\helper_shrk.csproj",
+      "projectUniqueName": "E:\\что-то мое\\мои программы\\helper_shrk\\helper_shrk\\app2\\helper_shrk.csproj",
       "projectName": "helper_shrk",
-      "projectPath": "E:\\что-то мое\\проги\\helper_shrk\\app2\\helper_shrk.csproj",
+      "projectPath": "E:\\что-то мое\\мои программы\\helper_shrk\\helper_shrk\\app2\\helper_shrk.csproj",
       "packagesPath": "C:\\Users\\бобик\\.nuget\\packages\\",
-      "outputPath": "E:\\что-то мое\\проги\\helper_shrk\\app2\\obj\\",
+      "outputPath": "E:\\что-то мое\\мои программы\\helper_shrk\\helper_shrk\\app2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
