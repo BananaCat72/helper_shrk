@@ -1,0 +1,5 @@
+E:\что-то мое\проги\Новая папка\helper_shrk.exe
+E:\что-то мое\проги\Новая папка\helper_shrk.dll
+E:\что-то мое\проги\Новая папка\helper_shrk.deps.json
+E:\что-то мое\проги\Новая папка\helper_shrk.runtimeconfig.json
+E:\что-то мое\проги\Новая папка\helper_shrk.pdb

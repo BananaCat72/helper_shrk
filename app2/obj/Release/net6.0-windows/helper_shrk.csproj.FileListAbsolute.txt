@@ -1,0 +1,17 @@
+E:\что-то мое\проги\helper_shrk\app2\obj\Release\net6.0-windows\app2.Form1.resources
+E:\что-то мое\проги\helper_shrk\app2\obj\Release\net6.0-windows\helper_shrk.Properties.Resources.resources
+E:\что-то мое\проги\helper_shrk\app2\obj\Release\net6.0-windows\helper_shrk.csproj.GenerateResource.cache
+E:\что-то мое\проги\helper_shrk\app2\obj\Release\net6.0-windows\helper_shrk.GeneratedMSBuildEditorConfig.editorconfig
+E:\что-то мое\проги\helper_shrk\app2\obj\Release\net6.0-windows\helper_shrk.AssemblyInfoInputs.cache
+E:\что-то мое\проги\helper_shrk\app2\obj\Release\net6.0-windows\helper_shrk.AssemblyInfo.cs
+E:\что-то мое\проги\helper_shrk\app2\obj\Release\net6.0-windows\helper_shrk.csproj.CoreCompileInputs.cache
+E:\что-то мое\проги\helper_shrk\app2\bin\Release\net6.0-windows\helper_shrk.exe
+E:\что-то мое\проги\helper_shrk\app2\bin\Release\net6.0-windows\helper_shrk.deps.json
+E:\что-то мое\проги\helper_shrk\app2\bin\Release\net6.0-windows\helper_shrk.runtimeconfig.json
+E:\что-то мое\проги\helper_shrk\app2\bin\Release\net6.0-windows\helper_shrk.dll
+E:\что-то мое\проги\helper_shrk\app2\bin\Release\net6.0-windows\helper_shrk.pdb
+E:\что-то мое\проги\helper_shrk\app2\obj\Release\net6.0-windows\helper_shrk.dll
+E:\что-то мое\проги\helper_shrk\app2\obj\Release\net6.0-windows\refint\helper_shrk.dll
+E:\что-то мое\проги\helper_shrk\app2\obj\Release\net6.0-windows\helper_shrk.pdb
+E:\что-то мое\проги\helper_shrk\app2\obj\Release\net6.0-windows\helper_shrk.genruntimeconfig.cache
+E:\что-то мое\проги\helper_shrk\app2\obj\Release\net6.0-windows\ref\helper_shrk.dll
