@@ -12,6 +12,10 @@ namespace app2
         public Form1()
         {
             InitializeComponent();
+
+            panel1.BackColor = Color.FromArgb(230, panel1.BackColor);
+            panel2.BackColor = Color.FromArgb(230, panel1.BackColor);
+
         }
 
         private void аToolStripMenuItemSpravka_Click(object sender, EventArgs e)
@@ -40,7 +44,7 @@ namespace app2
                 "Разработал данную программу Мик Ман-Ди [1532143].\n" +
                 "При создании кода пользовался нейросетью ChatGPT.\n" +
                 "\n" +
-                "Версия 1.0",
+                "Версия 1.1",
                 "О программе! Гром и молния!");
         }
         //все переменные программы
@@ -78,19 +82,22 @@ namespace app2
             if (filePath != null && File.Exists(filePath))
             {
                 textBoxAll.Clear();
+                textBoxDokpat.Clear();
+                string[] reportLines = File.ReadAllLines(filePath);
                 if (radioButtonOhrana.Checked)
                 {
-                    Ohrana(filePath);
+                    Ohrana(filePath, reportLines);
                 }
                 else
                 if (radioButtonProd.Checked)
                 {
-                    Prodovolka(filePath);
+                    Prodovolka(filePath, reportLines);
                 }
                 else
                 if (radioButtonVrach.Checked)
                 {
-                    Vrach(filePath);
+                    Vrach(filePath, reportLines);
+                    Vrach_DokPat(filePath, reportLines);
                 }
             }
             // если не был выбран файл
@@ -103,13 +110,12 @@ namespace app2
 
 
         // ПОДСЧЕТ ДЕЯТЕЛЬНОСТИ
-        public void Ohrana(string filePath)
+        public void Ohrana(string filePath, string[] reportLines)
         {
             Dictionary<string, int> collectors = new Dictionary<string, int>();
             Dictionary<string, int> leaders = new Dictionary<string, int>();
             Dictionary<string, int> participants = new Dictionary<string, int>();
 
-            string[] reportLines = File.ReadAllLines(filePath);
             string leadingPlayerId = string.Empty;
 
             foreach (string line in reportLines)
@@ -173,16 +179,13 @@ namespace app2
             }
         }
 
-
-        public void Prodovolka(string Path)
+        public void Prodovolka(string Path, string[] reportLines)
         {
 
             Dictionary<string, int> collectors = new Dictionary<string, int>();
             Dictionary<string, int> participants = new Dictionary<string, int>();
             Dictionary<string, int> assistants = new Dictionary<string, int>();
             Dictionary<string, Dictionary<string, int>> caughtAnimals = new Dictionary<string, Dictionary<string, int>>();
-
-            string[] reportLines = File.ReadAllLines(filePath);
 
             string currentDate = string.Empty;
             string[] dateFormats = { "dd.MM.yy", "dd.MM.yyyy" };
@@ -274,56 +277,166 @@ namespace app2
             }
         }
 
-        public void Vrach(string Path)
+        public void Vrach_DokPat(string Path, string[] reportLines)
+        {
+            Dictionary<string, int> collectors = new Dictionary<string, int>();
+            Dictionary<string, Dictionary<string, int>> participants = new Dictionary<string, Dictionary<string, int>>();
+            Dictionary<string, int> assistants = new Dictionary<string, int>();
+
+            bool isDoctorPatrol = false;
+            foreach (string line in reportLines)
+            {
+                if (line.StartsWith("Отчёт о докторском патруле"))
+                {
+                    isDoctorPatrol = true;
+                }
+                else if (line.StartsWith("Отчёт о веточнике") || line.StartsWith("Отчёт о травнике") || line.StartsWith("Отчёт о мховнике") || line.StartsWith("Отчёт об одиночном"))
+                {
+                    isDoctorPatrol = false;
+                }
+
+                if (isDoctorPatrol)
+                {
+                    if (line.StartsWith("Участники:"))
+                    {
+                        MatchCollection participantMatches = Regex.Matches(line, @"(.+?)\s\[(\d+)\]\s\(\+([\d\w\s]+)\)");
+                        foreach (Match match in participantMatches)
+                        {
+                            string participantName = match.Groups[1].Value;
+                            string participantId = match.Groups[2].Value;
+                            string participantCountString = match.Groups[3].Value;
+
+                            int participantCount = GetParticipantCount(participantCountString);
+
+                            if (!participants.ContainsKey(participantId))
+                            {
+                                participants[participantId] = new Dictionary<string, int>();
+                            }
+
+                            participants[participantId].TryGetValue("мыши", out int count);
+                            participants[participantId]["мыши"] = count + participantCount;
+                        }
+                    }
+                    else if (line.StartsWith("Собирающий:"))
+                    {
+                        Match collectorMatch = Regex.Match(line, @"\[(\d+)\]");
+                        if (collectorMatch.Success)
+                        {
+                            string collectorId = collectorMatch.Groups[1].Value;
+                            collectors.TryGetValue(collectorId, out int count);
+                            collectors[collectorId] = count + 1;
+                        }
+                    }
+                    else if (line.StartsWith("Помощники:"))
+                    {
+                        MatchCollection assistantMatches = Regex.Matches(line, @"\[(\d+)\]");
+                        foreach (Match match in assistantMatches)
+                        {
+                            string assistantId = match.Groups[1].Value;
+                            assistants.TryGetValue(assistantId, out int count);
+                            assistants[assistantId] = count + 1;
+                        }
+                    }
+                }
+            }
+            static int GetParticipantCount(string participantCountString)
+            {
+                int participantCount = 0;
+                MatchCollection countMatches = Regex.Matches(participantCountString, @"\d+");
+                foreach (Match match in countMatches)
+                {
+                    participantCount += int.Parse(match.Value);
+                }
+                return participantCount;
+            }
+
+            // Вывод результатов
+            textBoxDokpat.Text += "ДОКПАТРУЛИ\r\n";
+            foreach (KeyValuePair<string, int> entry in collectors)
+            {
+                textBoxDokpat.Text += $"собирал {entry.Key} {entry.Value}\r\n";
+            }
+
+            foreach (KeyValuePair<string, Dictionary<string, int>> entry in participants)
+            {
+                textBoxDokpat.Text += $"{entry.Key}:\r\n";
+                foreach (KeyValuePair<string, int> animalEntry in entry.Value)
+                {
+                    textBoxDokpat.Text += $"поймано {animalEntry.Value} {animalEntry.Key}\r\n";
+                }
+            }
+            foreach (KeyValuePair<string, int> entry in assistants)
+            {
+                textBoxDokpat.Text += $"помогал {entry.Key} {entry.Value}\r\n";
+            }
+        }
+
+        public void Vrach(string Path, string[] reportLines)
         {
             Dictionary<string, int> singleCollectors = new Dictionary<string, int>();
             Dictionary<string, int> collectors = new Dictionary<string, int>();
             Dictionary<string, int> participants = new Dictionary<string, int>();
 
-            string[] reportLines = File.ReadAllLines(filePath);
-
             bool isSingleEvent = false;
             string singleEventCollectorId = string.Empty;
 
+            bool isDoctorPatrol = false;
             foreach (string line in reportLines)
             {
-                if (line.StartsWith("Отчёт об одиночном"))
+                if (line.StartsWith("Отчёт о докторском патруле."))
                 {
-                    isSingleEvent = true;
+                    isDoctorPatrol = true;
                 }
-                else if (line.StartsWith("Отчёт о веточнике.") || line.StartsWith("Отчёт о травнике.") || line.StartsWith("Отчёт о мховнике."))
+                else if (line.StartsWith("Отчёт о веточнике") || line.StartsWith("Отчёт о травнике") || line.StartsWith("Отчёт о мховнике")
+                    || line.StartsWith("Отчёт об одиночном"))
                 {
-                    isSingleEvent = false;
+                    isDoctorPatrol = false;
                 }
-                else if (line.StartsWith("Собирающий:") && !isSingleEvent)
+
+                if (!isDoctorPatrol)
                 {
-                    Match collectorMatch = Regex.Match(line, @"\[(\d+)\]");
-                    if (collectorMatch.Success)
+
+                    if (line.StartsWith("Отчёт об одиночном"))
                     {
-                        string collectorId = collectorMatch.Groups[1].Value;
-                        collectors.TryGetValue(collectorId, out int count);
-                        collectors[collectorId] = count + 1;
+                        isSingleEvent = true;
                     }
-                }
-                else if (line.StartsWith("Участники:") || line.StartsWith("Участник(и):") || line.StartsWith("Участник:"))
-                {
-                    MatchCollection participantMatches = Regex.Matches(line, @"\[(\d+)\]");
-                    foreach (Match match in participantMatches)
+                    else if (line.StartsWith("Отчёт о веточнике.") || line.StartsWith("Отчёт о травнике.") || line.StartsWith("Отчёт о мховнике."))
                     {
-                        string participantId = match.Groups[1].Value;
-                        if (isSingleEvent)
+                        isSingleEvent = false;
+                    }
+                    else if (line.StartsWith("Собирающий:") && !isSingleEvent)
+                    {
+                        Match collectorMatch = Regex.Match(line, @"\[(\d+)\]");
+                        if (collectorMatch.Success)
                         {
-                            singleCollectors.TryGetValue(participantId, out int count);
-                            singleCollectors[participantId] = count + 1;
-                        }
-                        else
-                        {
-                            participants.TryGetValue(participantId, out int count);
-                            participants[participantId] = count + 1;
+                            string collectorId = collectorMatch.Groups[1].Value;
+                            collectors.TryGetValue(collectorId, out int count);
+                            collectors[collectorId] = count + 1;
                         }
                     }
+                    else if (line.StartsWith("Участники:") || line.StartsWith("Участник(и):") || line.StartsWith("Участник:"))
+                    {
+                        MatchCollection participantMatches = Regex.Matches(line, @"\[(\d+)\]");
+                        foreach (Match match in participantMatches)
+                        {
+                            string participantId = match.Groups[1].Value;
+                            if (isSingleEvent)
+                            {
+                                singleCollectors.TryGetValue(participantId, out int count);
+                                singleCollectors[participantId] = count + 1;
+                            }
+                            else
+                            {
+                                participants.TryGetValue(participantId, out int count);
+                                participants[participantId] = count + 1;
+                            }
+                        }
+                    }
+
                 }
             }
+
+
 
             // Вывод результатов
             textBoxAll.Text += "ВРАЧЕВАТЕЛЬНАЯ СФЕРА\r\n";
@@ -342,6 +455,7 @@ namespace app2
             {
                 textBoxAll.Text += $"участвовал {entry.Key} {entry.Value}\r\n";
             }
+
 
         }
     }

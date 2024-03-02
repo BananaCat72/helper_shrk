@@ -6,15 +6,15 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "app2/1.0.0": {
+      "helper_shrk/1.0.0": {
         "runtime": {
-          "app2.dll": {}
+          "helper_shrk.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "app2/1.0.0": {
+    "helper_shrk/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

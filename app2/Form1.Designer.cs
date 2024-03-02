@@ -55,9 +55,10 @@
             // 
             // buttonChooseFile
             // 
+            buttonChooseFile.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             buttonChooseFile.BackColor = Color.SaddleBrown;
             buttonChooseFile.ForeColor = Color.White;
-            buttonChooseFile.Location = new Point(12, 269);
+            buttonChooseFile.Location = new Point(12, 271);
             buttonChooseFile.Name = "buttonChooseFile";
             buttonChooseFile.Size = new Size(155, 37);
             buttonChooseFile.TabIndex = 0;
@@ -99,9 +100,10 @@
             // 
             // buttonPodchet
             // 
+            buttonPodchet.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             buttonPodchet.BackColor = Color.SaddleBrown;
             buttonPodchet.ForeColor = Color.White;
-            buttonPodchet.Location = new Point(12, 312);
+            buttonPodchet.Location = new Point(12, 314);
             buttonPodchet.Name = "buttonPodchet";
             buttonPodchet.Size = new Size(155, 37);
             buttonPodchet.TabIndex = 1;
@@ -143,30 +145,34 @@
             // 
             // textBoxDokpat
             // 
+            textBoxDokpat.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             textBoxDokpat.BackColor = Color.FloralWhite;
-            textBoxDokpat.Location = new Point(204, 45);
+            textBoxDokpat.Location = new Point(203, 45);
             textBoxDokpat.Multiline = true;
             textBoxDokpat.Name = "textBoxDokpat";
             textBoxDokpat.ReadOnly = true;
             textBoxDokpat.ScrollBars = ScrollBars.Vertical;
-            textBoxDokpat.Size = new Size(183, 251);
+            textBoxDokpat.Size = new Size(183, 253);
             textBoxDokpat.TabIndex = 1;
-            textBoxDokpat.Text = "Здесь докторские патрули (пока не сделано)";
+            textBoxDokpat.Text = "докторские патрули";
             // 
             // textBoxAll
             // 
+            textBoxAll.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             textBoxAll.BackColor = Color.FloralWhite;
-            textBoxAll.Location = new Point(15, 45);
+            textBoxAll.Location = new Point(8, 45);
             textBoxAll.Multiline = true;
             textBoxAll.Name = "textBoxAll";
             textBoxAll.ReadOnly = true;
             textBoxAll.ScrollBars = ScrollBars.Vertical;
-            textBoxAll.Size = new Size(183, 251);
+            textBoxAll.Size = new Size(183, 253);
             textBoxAll.TabIndex = 0;
-            textBoxAll.Text = "Здесь общие отчеты по деятельности";
+            textBoxAll.Text = "общие отчеты";
             // 
             // panel1
             // 
+            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             panel1.BackColor = Color.AntiqueWhite;
             panel1.BorderStyle = BorderStyle.FixedSingle;
             panel1.Controls.Add(label2);
@@ -174,7 +180,7 @@
             panel1.Controls.Add(textBoxAll);
             panel1.Location = new Point(176, 38);
             panel1.Name = "panel1";
-            panel1.Size = new Size(396, 311);
+            panel1.Size = new Size(396, 313);
             panel1.TabIndex = 3;
             // 
             // label2
@@ -190,6 +196,8 @@
             // 
             // panel2
             // 
+            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             panel2.BackColor = Color.AntiqueWhite;
             panel2.BorderStyle = BorderStyle.FixedSingle;
             panel2.Controls.Add(radioButtonVrach);
@@ -198,7 +206,7 @@
             panel2.Controls.Add(radioButtonProd);
             panel2.Location = new Point(12, 38);
             panel2.Name = "panel2";
-            panel2.Size = new Size(158, 128);
+            panel2.Size = new Size(158, 130);
             panel2.TabIndex = 4;
             // 
             // label1
@@ -216,7 +224,7 @@
             // 
             statusStrip1.BackColor = Color.SaddleBrown;
             statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1, toolStripStatusLabelFilePath });
-            statusStrip1.Location = new Point(0, 357);
+            statusStrip1.Location = new Point(0, 359);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Size = new Size(584, 22);
             statusStrip1.TabIndex = 5;
@@ -242,7 +250,7 @@
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
-            ClientSize = new Size(584, 379);
+            ClientSize = new Size(584, 381);
             Controls.Add(statusStrip1);
             Controls.Add(panel2);
             Controls.Add(panel1);
@@ -253,8 +261,8 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             MaximizeBox = false;
-            MaximumSize = new Size(600, 418);
-            MinimumSize = new Size(600, 418);
+            MaximumSize = new Size(600, 420);
+            MinimumSize = new Size(600, 420);
             Name = "Form1";
             SizeGripStyle = SizeGripStyle.Hide;
             StartPosition = FormStartPosition.CenterScreen;
