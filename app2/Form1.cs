@@ -44,7 +44,7 @@ namespace app2
                 "Разработал данную программу Мик Ман-Ди [1532143].\n" +
                 "При создании кода пользовался нейросетью ChatGPT.\n" +
                 "\n" +
-                "Версия 1.2",
+                "Версия 1.3",
                 "О программе! Гром и молния!");
         }
         //все переменные программы
@@ -204,12 +204,12 @@ namespace app2
                 }
                 else if (!ProverkaNaSpheru(reportLines, radioButtonOhrana.Checked, radioButtonProd.Checked, radioButtonVrach.Checked, line))
                 {
-                    MessageBox.Show("Пират, в этом документе есть отчеты из другой сферы! Удали их!", "Кальмарьи кишки!");
+                    MessageBox.Show("Пират, в этом документе есть отчеты из другой сферы!", "Кальмарьи кишки!");
                     break;
                 }
                 else if (!ProverkaNaLishnee(reportLines, line))
                 {
-                    MessageBox.Show("Пират, тут есть что-то лишнее, и оно помешает подсчету! Убери его отсюда!", "Тысяча горбатых моллюсков!");
+                    MessageBox.Show("Пират, тут есть что-то лишнее, и оно помешает подсчету!", "Тысяча горбатых моллюсков!");
                     break;
                 }
             }
@@ -306,12 +306,12 @@ namespace app2
                 }
                 if (!ProverkaNaSpheru(reportLines, radioButtonOhrana.Checked, radioButtonProd.Checked, radioButtonVrach.Checked, line))
                 {
-                    MessageBox.Show("Пират, в этом документе есть отчеты из другой сферы! Удали их!", "Кальмарьи кишки!");
+                    MessageBox.Show("Пират, в этом документе есть отчеты из другой сферы!", "Кальмарьи кишки!");
                     break;
                 }
                 else if (!ProverkaNaLishnee(reportLines, line))
                 {
-                    MessageBox.Show("Пират, тут есть что-то лишнее, и оно помешает подсчету! Убери его отсюда!", "Тысяча горбатых моллюсков!");
+                    MessageBox.Show("Пират, тут есть что-то лишнее, и оно будет мешает подсчету!", "Тысяча горбатых моллюсков!");
                     break;
                 }
             }
@@ -323,10 +323,10 @@ namespace app2
                 textBoxAll.Text += ($"собирал {entry.Key} {entry.Value}\r\n");
             }
 
-            foreach (KeyValuePair<string, int> entry in participants)
-            {
-                textBoxAll.Text += ($"участвовал {entry.Key} {entry.Value}\r\n");
-            }
+            //foreach (KeyValuePair<string, int> entry in participants)
+            //{
+            //    textBoxAll.Text += ($"участвовал {entry.Key} {entry.Value}\r\n");
+            //}
 
             foreach (KeyValuePair<string, int> entry in assistants)
             {
@@ -411,12 +411,12 @@ namespace app2
                 }
                 if (!ProverkaNaSpheru(reportLines, radioButtonOhrana.Checked, radioButtonProd.Checked, radioButtonVrach.Checked, line))
                 {
-                    MessageBox.Show("Пират, в этом документе есть отчеты из другой сферы! Удали их!", "Кальмарьи кишки!");
+                    MessageBox.Show("Пират, в этом документе есть отчеты из другой сферы!", "Кальмарьи кишки!");
                     break;
                 }
                 else if (!ProverkaNaLishnee(reportLines, line))
                 {
-                    MessageBox.Show("Пират, тут есть что-то лишнее, и оно помешает подсчету! Убери его отсюда!", "Тысяча горбатых моллюсков!");
+                    MessageBox.Show("Пират, тут есть что-то лишнее, и оно будет мешает подсчету!", "Тысяча горбатых моллюсков!");
                     break;
                 }
 
@@ -521,12 +521,12 @@ namespace app2
                 }
                 if (!ProverkaNaSpheru(reportLines, radioButtonOhrana.Checked, radioButtonProd.Checked, radioButtonVrach.Checked, line))
                 {
-                    MessageBox.Show("Пират, в этом документе есть отчеты из другой сферы! Удали их!", "Кальмарьи кишки!");
+                    MessageBox.Show("Пират, в этом документе есть отчеты из другой сферы!", "Кальмарьи кишки!");
                     break;
                 }
                 else if (!ProverkaNaLishnee(reportLines, line))
                 {
-                    MessageBox.Show("Пират, тут есть что-то лишнее, и оно помешает подсчету! Убери его отсюда!", "Тысяча горбатых моллюсков!");
+                    MessageBox.Show("Пират, тут есть что-то лишнее, и оно будет мешает подсчету!", "Тысяча горбатых моллюсков!");
                     break;
                 }
             }
