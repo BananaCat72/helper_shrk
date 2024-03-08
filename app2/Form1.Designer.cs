@@ -34,6 +34,7 @@
             menuStrip1 = new MenuStrip();
             аToolStripMenuItemSpravka = new ToolStripMenuItem();
             оПрограммеToolStripMenuItem = new ToolStripMenuItem();
+            обновлениеToolStripMenuItem = new ToolStripMenuItem();
             buttonPodchet = new Button();
             radioButtonVrach = new RadioButton();
             radioButtonProd = new RadioButton();
@@ -73,7 +74,7 @@
             // menuStrip1
             // 
             menuStrip1.BackColor = Color.SaddleBrown;
-            menuStrip1.Items.AddRange(new ToolStripItem[] { аToolStripMenuItemSpravka, оПрограммеToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { аToolStripMenuItemSpravka, оПрограммеToolStripMenuItem, обновлениеToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(584, 24);
@@ -97,6 +98,15 @@
             оПрограммеToolStripMenuItem.Size = new Size(95, 20);
             оПрограммеToolStripMenuItem.Text = "О программе";
             оПрограммеToolStripMenuItem.Click += оПрограммеToolStripMenuItem_Click;
+            // 
+            // обновлениеToolStripMenuItem
+            // 
+            обновлениеToolStripMenuItem.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            обновлениеToolStripMenuItem.ForeColor = Color.White;
+            обновлениеToolStripMenuItem.Name = "обновлениеToolStripMenuItem";
+            обновлениеToolStripMenuItem.Size = new Size(76, 20);
+            обновлениеToolStripMenuItem.Text = "Обновить";
+            обновлениеToolStripMenuItem.Click += обновлениеToolStripMenuItem_Click;
             // 
             // buttonPodchet
             // 
@@ -299,5 +309,6 @@
         private StatusStrip statusStrip1;
         private ToolStripStatusLabel toolStripStatusLabel1;
         private ToolStripStatusLabel toolStripStatusLabelFilePath;
+        private ToolStripMenuItem обновлениеToolStripMenuItem;
     }
 }

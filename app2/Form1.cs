@@ -4,6 +4,7 @@ using System.Text;
 using System.Collections;
 using System.Text.RegularExpressions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Diagnostics;
 
 namespace app2
 {
@@ -44,12 +45,32 @@ namespace app2
                 "Разработал данную программу Мик Ман-Ди [1532143].\n" +
                 "При создании кода пользовался нейросетью ChatGPT.\n" +
                 "\n" +
-                "Версия 1.3",
+                "Версия 1.4",
                 "О программе! Гром и молния!");
         }
+
+
+        private void обновлениеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+                using (Process process = new())
+                {
+                    process.StartInfo.UseShellExecute = true;
+                    process.StartInfo.FileName = "https://github.com/BananaCat72/helper_shrk";
+                    process.Start();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
         //все переменные программы
         string filePath;
-
 
         // КНОПКИ
         private void buttonChooseFile_Click(object sender, EventArgs e)
@@ -147,6 +168,7 @@ namespace app2
             return continuePodchet;
         }
 
+
         // ПОДСЧЕТ ДЕЯТЕЛЬНОСТИ
         public void Ohrana(string filePath, string[] reportLines)
         {
@@ -159,7 +181,7 @@ namespace app2
 
             foreach (string line in reportLines)
             {
-                if (ProverkaNaSpheru(reportLines, radioButtonOhrana.Checked, radioButtonProd.Checked, radioButtonVrach.Checked, line) 
+                if (ProverkaNaSpheru(reportLines, radioButtonOhrana.Checked, radioButtonProd.Checked, radioButtonVrach.Checked, line)
                     && ProverkaNaLishnee(reportLines, line))
                 {
                     if (line.StartsWith("Собирающий:"))
@@ -552,5 +574,7 @@ namespace app2
 
 
         }
+
+
     }
 }
